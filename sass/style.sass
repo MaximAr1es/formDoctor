@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;1,300&display=swap')
+body
+    padding: 0
+    margin: 0
+#app
+    display: flex
+    flex-direction: column
+    height: 100vh
+    align-items: center
+.typo__p
+    align-self: center
+    font-family: 'Montserrat', sans-serif
+    font-style: normal
+.btn
+    border: none
+    border-radius: 4px
+    padding: 10px 30px
+    background: rgb(147, 222, 0)
+    transition: 0.5s
+    color: #fff
+    font-family: 'Montserrat', sans-serif
+    font-style: normal
+    text-shadow: 0 0 3px #000
+    outline: none
+.btn:hover
+    cursor: pointer 
+    background: rgb(147, 240, 0)
+.passport-block
+    display: flex
+    flex-direction: column
+    .passport .passport-block__item:nth-child(1)
+        width: 50px
+.about-us
+    margin-top: 0
+    align-self: center
+    font-family: 'Montserrat', sans-serif
+    font-style: normal
+.form
+    display: flex
+    flex-direction: column
+.phone-block
+    display: flex
+    justify-content: center
+.phone-block span,.passport-date span
+    border-bottom: 1px solid silver
+    border-radius: 4px
+    padding: 5px 10px
+    font-family: 'Montserrat', sans-serif
+    font-style: italic
+.group-person
+    display: flex
+    align-items: center
+    justify-content: space-between
+.form__item
+    margin-bottom: 20px
+.gender, .sms-block
+    display: flex
+    justify-content: center
+.adress-block
+    display: flex
+    flex-direction: column
+    .adress .adress-block__item:nth-child(1)
+        width: 50px
+input 
+    border: none
+    border-bottom: 1px solid silver
+    border-radius: 4px
+    background: white
+    padding: 5px 10px
+    outline: none
+.dirty 
+    border-color: #5A5
+    background: #EFE
+.dirty:focus 
+    outline-color: #8E8
+.error 
+    border-color: red
+    background: #FDD
+.error:focus 
+    outline-color: #F99
+
