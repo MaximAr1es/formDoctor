@@ -13,18 +13,26 @@
     <div id="app">
       <h2 class="about-us">{{aboutUs}}</h2>
       <form class="form" @submit.prevent="submit">
-        <input class="form__item"
+        <input
+          class="form__item"
           v-model="$v.lastName.$model"
           :class="status($v.lastName)"
           placeholder="Фамилия*"
         />
-        <input class="form__item"
+        <input
+          class="form__item"
           v-model="$v.firstName.$model"
           :class="status($v.firstName)"
           placeholder="Имя*"
         />
         <input class="form__item" placeholder="Отчество(если есть)" />
-        <input class="form__item"  type="date" v-model="$v.date.$model" :class="status($v.date)"/>
+        <input
+          class="form__item date"
+          type="date"
+          @input="$v.dateObject.$touch"
+          v-model="date"
+          :class="status($v.dateObject)"
+        />
         <div class="phone-block form__item">
           <span>+7</span>
           <input
@@ -62,40 +70,81 @@
         </div>
         <div class="sms-block form__item">
           <span class="sms-block__title">Не отправлять смс - </span>
-          <input type="checkbox">
+          <input type="checkbox" />
         </div>
         <h2 class="about-us">{{adressUs}}</h2>
         <div class="adress-block">
           <div class="adress form__item">
-            <input class="adress-block__item" placeholder="Индекс" v-model="$v.index.$model" :class="status($v.index)"/>
-            <input class="adress-block__item" placeholder="Страна"/>
+            <input
+              class="adress-block__item"
+              placeholder="Индекс"
+              v-model="$v.index.$model"
+              :class="status($v.index)"
+            />
+            <input class="adress-block__item" placeholder="Страна" />
           </div>
-          <input class="adress-block__item form__item" placeholder="Облась"/>
-          <input class="adress-block__item form__item" placeholder="Город*" v-model="$v.city.$model" :class="status($v.city)"/>
+          <input class="adress-block__item form__item" placeholder="Облась" />
+          <input
+            class="adress-block__item form__item"
+            placeholder="Город*"
+            v-model="$v.city.$model"
+            :class="status($v.city)"
+          />
           <div class="adress form__item">
-            <input class="adress-block__item" placeholder="Улица"/>
-            <input class="adress-block__item" placeholder="Дом" v-model="$v.house.$model" :class="status($v.house)"/>
+            <input class="adress-block__item" placeholder="Улица" />
+            <input
+              class="adress-block__item"
+              placeholder="Дом"
+              v-model="$v.house.$model"
+              :class="status($v.house)"
+            />
           </div>
         </div>
         <h2 class="about-us">{{passportUs}}</h2>
         <div class="passport-block">
-          <select v-model="$v.passport.$model" class="form__item" :class="status($v.passport)">
+          <select
+            v-model="$v.passport.$model"
+            class="form__item"
+            :class="status($v.passport)"
+          >
             <option disabled value="">Документ</option>
             <option value="passport">Паспорт</option>
             <option value="passport">Свидетельство о рождении</option>
             <option value="passport">Вод. Удостоверение</option>
           </select>
           <div class="passport form__item">
-            <input class="passport-block__item" v-model="$v.series.$model" :class="status($v.series)" maxlength="4"placeholder="Серия"/>
-            <input class="passport-block__item" v-model="$v.number.$model" :class="status($v.number)" maxlength="6"placeholder="Номер"/>
+            <input
+              class="passport-block__item"
+              v-model="$v.series.$model"
+              :class="status($v.series)"
+              maxlength="4"
+              placeholder="Серия"
+            />
+            <input
+              class="passport-block__item"
+              v-model="$v.number.$model"
+              :class="status($v.number)"
+              maxlength="6"
+              placeholder="Номер"
+            />
           </div>
           <input placeholder="Кем выдан" class="form__item" />
           <div class="passport-date form__item">
             <span>Дата выдачи</span>
-            <input type="date" v-model="$v.passportDate.$model" :class="status($v.passportDate)" />
+            <input
+              class="date"
+              @input="$v.passportObject.$touch"
+              type="date"
+              v-model="passportDate"
+              :class="status($v.passportObject)"
+            />
           </div>
         </div>
-        <button class="btn" type="submit" :disabled="submitStatus === 'PENDING'">
+        <button
+          class="btn"
+          type="submit"
+          :disabled="submitStatus === 'PENDING'"
+        >
           Регистрация
         </button>
         <p class="typo__p" v-if="submitStatus === 'OK'">
@@ -110,7 +159,19 @@
 
     <script>
       Vue.use(window.vuelidate.default);
-      const { required, minLength, maxLength, numeric, alpha } = window.validators;
+      const {
+        required,
+        minLength,
+        maxLength,
+        numeric,
+        helpers,
+        maxValue,
+      } = window.validators;
+      const alphaDiacritic = helpers.regex(
+        "alphaDiacritic",
+        /^[a-zA-Zа-яА-я]*$/
+      );
+
       Vue.directive("phone", {
         bind(el) {
           el.oninput = function (e) {
@@ -162,39 +223,49 @@
           },
           city: {
             required,
-            alpha
+            alphaDiacritic,
           },
-          index:{
+          index: {
             numeric,
             minLength: minLength(6),
-            maxLength: maxLength(6)
+            maxLength: maxLength(6),
           },
-          house:{
-            numeric
+          house: {
+            numeric,
           },
-          date: {
-            required
-          },
-          phone:{
+          dateObject: {
             required,
-            minLength: minLength(14)
+            maxValue: maxValue(new Date()),
           },
-          passport:{
-            required
+          phone: {
+            required,
+            minLength: minLength(14),
           },
-          series:{
+          passport: {
+            required,
+          },
+          series: {
             numeric,
             minLength: minLength(4),
-            maxLength: maxLength(4)
+            maxLength: maxLength(4),
           },
-          number:{
+          number: {
             numeric,
             minLength: minLength(6),
-            maxLength: maxLength(6)
+            maxLength: maxLength(6),
           },
-          passportDate:{
-            required
-          }
+          passportObject: {
+            required,
+            maxValue: maxValue(new Date())
+          },
+        },
+        computed: {
+          dateObject() {
+            return this.date ? new Date(this.date) : null;
+          },
+          passportObject(){
+            return this.passportDate ? new Date(this.passportDate) : null;
+          },
         },
         methods: {
           status(validation) {
